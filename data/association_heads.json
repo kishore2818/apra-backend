@@ -1,0 +1,110 @@
+{
+  "association": {
+    "nameTamil": "பொன்னப்ப நாடார் நகர் குடியிருப்பு வசதி மேம்பாட்டு சங்கம்",
+    "nameEnglish": "ASSOCIATION FOR PONNAPPA NADAR NAGAR RESIDENTS AMENITY",
+    "shortName": "APRA",
+    "regdNo": "Regd. No. 25/2023",
+    "addressTamil": "71 C3/A4, சங்கர மேனன் தெரு, பி.என். காலனி, நாகர்கோவில் - 4.",
+    "addressEnglish": "71 C3/A4, Sankara Menon Street, P. N. Nagar, Nagercoil - 4.",
+    "pincode": "629004"
+  },
+  "heads": [
+    {
+      "id": 1,
+      "role": "President",
+      "roleTamil": "தலைவர்",
+      "name": "Mr. K.S. Murugesan",
+      "phone": "9442636020",
+      "category": "Executive"
+    },
+    {
+      "id": 2,
+      "role": "Vice-President - 1",
+      "roleTamil": "துணைத் தலைவர் 1",
+      "name": "Mr. J.H. Benzigar",
+      "phone": "9488960361",
+      "category": "Executive"
+    },
+    {
+      "id": 3,
+      "role": "Vice-President - 2",
+      "roleTamil": "துணைத் தலைவர் 2",
+      "name": "Mr. T.V.S. Pillai",
+      "phone": "9443117331",
+      "category": "Executive"
+    },
+    {
+      "id": 4,
+      "role": "Secretary",
+      "roleTamil": "செயலாளர்",
+      "name": "Mr. K. Perumal",
+      "phone": "9994911733",
+      "category": "Executive"
+    },
+    {
+      "id": 5,
+      "role": "Treasurer",
+      "roleTamil": "பொருளாளர்",
+      "name": "Mr. D. Vivekanandan",
+      "phone": "9443894258",
+      "category": "Executive"
+    },
+    {
+      "id": 6,
+      "role": "Joint Secretary",
+      "roleTamil": "இணைச் செயலாளர்",
+      "name": "Mr. J. Nelson",
+      "phone": "9444269232",
+      "category": "Secretaries"
+    },
+    {
+      "id": 7,
+      "role": "Joint Secretary",
+      "roleTamil": "இணைச் செயலாளர்",
+      "name": "Mr. S. Mohamed Iqbal",
+      "phone": "8754295758",
+      "category": "Secretaries"
+    },
+    {
+      "id": 8,
+      "role": "Legal Advisor",
+      "roleTamil": "சட்ட ஆலோசகர்",
+      "name": "Adv. P. Paramadhas",
+      "phone": "9443261005",
+      "category": "Advisors"
+    },
+    {
+      "id": 9,
+      "role": "Legal Advisor",
+      "roleTamil": "சட்ட ஆலோசகர்",
+      "name": "Adv. Jeen Jacko",
+      "phone": "9443432606",
+      "category": "Advisors"
+    },
+    {
+      "id": 10,
+      "role": "General Advisor",
+      "roleTamil": "பொது ஆலோசகர்",
+      "name": "Mr. C.M. Ivin",
+      "phone": "9443483005",
+      "category": "Advisors"
+    },
+    {
+      "id": 11,
+      "role": "General Advisor",
+      "roleTamil": "பொது ஆலோசகர்",
+      "name": "Er. A. Bernard",
+      "phone": "9443368578",
+      "category": "Advisors"
+    },
+    {
+      "id": 12,
+      "role": "General Advisor",
+      "roleTamil": "பொது ஆலோசகர்",
+      "name": "Mr. M.S. Selvaraj",
+      "phone": "944126028",
+      "note": "Document shows 9 digits: 944126028. Confirm if 9444126028 or 9441260028",
+      "category": "Advisors"
+    }
+  ]
+}

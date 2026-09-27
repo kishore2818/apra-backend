@@ -1,0 +1,162 @@
+[
+  {
+    "applicationNo": 1,
+    "receiptNo": 1,
+    "submissionDate": "2023-08-19",
+    "residentType": "Owner",
+    "fullName": "K.S. MURUGESAN",
+    "age": 67,
+    "gender": "Male",
+    "layoutPlotNo": "6/35",
+    "doorNoOld": "",
+    "doorNoNew": "250",
+    "street": "Carmel Mount Road - Second Cross Street",
+    "mailingAddress": "K.S. Murugesan, 6/35-250, Carmel Mount Road, Ponnappa Nadar Nagar, Nagercoil",
+    "phone": "9442636020",
+    "landline": "",
+    "email": "nayakimurugesan@gmail.com",
+    "admissionFee": 100,
+    "status": "Approved",
+    "photoUrl": "",
+    "familyMembers": [
+      {
+        "id": 1,
+        "name": "K.S. Murugesan",
+        "gender": "Male",
+        "relationship": "Self",
+        "age": 67
+      },
+      {
+        "id": 2,
+        "name": "M. Thirumal Nayaki",
+        "gender": "Female",
+        "relationship": "Wife",
+        "age": 62
+      }
+    ],
+    "declarationAccepted": true,
+    "approvedBy": {
+      "president": "Mr. K.S. Murugesan",
+      "secretary": "Mr. K. Perumal",
+      "treasurer": "Mr. D. Vivekanandan"
+    }
+  },
+  {
+    "applicationNo": 2,
+    "receiptNo": 2,
+    "submissionDate": "2023-09-02",
+    "residentType": "Owner",
+    "fullName": "J.H. BENZIGAR",
+    "age": 58,
+    "gender": "Male",
+    "layoutPlotNo": "4/12",
+    "doorNoOld": "",
+    "doorNoNew": "112",
+    "street": "Sankara Menon Street",
+    "mailingAddress": "J.H. Benzigar, 4/12-112, Sankara Menon Street, P.N. Nagar, Nagercoil",
+    "phone": "9488960361",
+    "landline": "",
+    "email": "jh.benzigar@apra.org",
+    "admissionFee": 100,
+    "status": "Approved",
+    "photoUrl": "",
+    "familyMembers": [
+      {
+        "id": 1,
+        "name": "J.H. Benzigar",
+        "gender": "Male",
+        "relationship": "Self",
+        "age": 58
+      },
+      {
+        "id": 2,
+        "name": "Maria Benzigar",
+        "gender": "Female",
+        "relationship": "Wife",
+        "age": 54
+      }
+    ],
+    "declarationAccepted": true
+  },
+  {
+    "applicationNo": 3,
+    "receiptNo": 3,
+    "submissionDate": "2023-10-15",
+    "residentType": "Tenant",
+    "fullName": "S. MOHAMED IQBAL",
+    "age": 46,
+    "gender": "Male",
+    "layoutPlotNo": "8/22",
+    "doorNoOld": "",
+    "doorNoNew": "78/B",
+    "street": "Ponnappa Nadar Main Road",
+    "mailingAddress": "S. Mohamed Iqbal, 8/22-78/B, Ponnappa Nadar Main Road, Nagercoil",
+    "phone": "8754295758",
+    "landline": "",
+    "email": "iqbal.mohamed@apra.org",
+    "admissionFee": 100,
+    "status": "Approved",
+    "photoUrl": "",
+    "familyMembers": [
+      {
+        "id": 1,
+        "name": "S. Mohamed Iqbal",
+        "gender": "Male",
+        "relationship": "Self",
+        "age": 46
+      },
+      {
+        "id": 2,
+        "name": "Fathima Iqbal",
+        "gender": "Female",
+        "relationship": "Wife",
+        "age": 42
+      },
+      {
+        "id": 3,
+        "name": "Ayaan Iqbal",
+        "gender": "Male",
+        "relationship": "Son",
+        "age": 14
+      }
+    ],
+    "declarationAccepted": true
+  },
+  {
+    "applicationNo": 4,
+    "receiptNo": 4,
+    "submissionDate": "2024-01-10",
+    "residentType": "Owner",
+    "fullName": "T.V.S. PILLAI",
+    "age": 63,
+    "gender": "Male",
+    "layoutPlotNo": "2/14",
+    "doorNoOld": "",
+    "doorNoNew": "84",
+    "street": "Carmel Mount Road First Cross",
+    "mailingAddress": "T.V.S. Pillai, 2/14-84, Carmel Mount Road, Nagercoil",
+    "phone": "9443117331",
+    "landline": "",
+    "email": "tvs.pillai@apra.org",
+    "admissionFee": 100,
+    "status": "Approved",
+    "photoUrl": "",
+    "familyMembers": [
+      {
+        "id": 1,
+        "name": "T.V.S. Pillai",
+        "gender": "Male",
+        "relationship": "Self",
+        "age": 63
+      },
+      {
+        "id": 2,
+        "name": "V. Gomathi Ammal",
+        "gender": "Female",
+        "relationship": "Wife",
+        "age": 59
+      }
+    ],
+    "declarationAccepted": true
+  }
+]
