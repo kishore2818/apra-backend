@@ -42,7 +42,6 @@ async function syncToGoogleSheet(member, familyMembers = []) {
           phone:          member.phone,
           landline:       member.landline,
           email:          member.email,
-          admissionFee:   member.admission_fee,
           status:         member.status,
           familyMembers:  familyMembers.map(f => ({
             name:         f.name,
@@ -252,7 +251,7 @@ app.get('/api/members', async (req, res) => {
     // Stats query (always on full dataset)
     const { data: allMembers, error: statsError } = await supabase
       .from('members')
-      .select('status, resident_type, admission_fee');
+      .select('status, resident_type');
     if (statsError) throw statsError;
 
     const total      = allMembers.length;
@@ -274,7 +273,6 @@ app.get('/api/members', async (req, res) => {
       doorNoOld:      m.door_no_old,
       doorNoNew:      m.door_no_new,
       mailingAddress: m.mailing_address,
-      admissionFee:   m.admission_fee,
       photoDataUrl:   m.photo_url,
       signatureName:  m.signature_name,
       declarationAccepted: m.declaration_accepted,
@@ -358,7 +356,6 @@ app.post('/api/members', async (req, res) => {
         phone:               body.phone,
         landline:            body.landline || '',
         email:               body.email || '',
-        admission_fee:       100,
         status:              'Pending Verification',
         photo_url:           finalPhotoUrl,
         signature_name:      body.signatureName || body.fullName || '',

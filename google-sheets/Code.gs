@@ -33,9 +33,8 @@ function setupSheetHeaders() {
     "Street",
     "Mailing Address",
     "Phone Number",
-    "Email",
     "Status",
-    "Admission Fee",
+    "Photo URL",
     "Family Members Count",
     "Family Members List"
   ];
@@ -80,9 +79,8 @@ function doPost(e) {
       item.street         || "",
       item.mailingAddress || "",
       item.phone          || "",
-      item.email          || "",
       item.status         || "Pending Verification",
-      "₹" + (item.admissionFee || 100),
+      item.photoUrl || item.photoDataUrl || "",
       item.familyMembers  ? item.familyMembers.length : 0,
       familySummary
     ];
