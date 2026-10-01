@@ -13,50 +13,6 @@ const PORT = process.env.PORT || 5001;
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
-// ─────────────────────────────────────────────
-// HELPER: Sync new member to Google Sheet
-// ─────────────────────────────────────────────
-async function syncToGoogleSheet(member, familyMembers = []) {
-  const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
-  if (!webhookUrl) return;
-
-  try {
-    await fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'NEW_APPLICATION',
-        data: {
-          applicationNo:  member.application_no,
-          receiptNo:      member.receipt_no,
-          submissionDate: member.submission_date,
-          residentType:   member.resident_type,
-          fullName:       member.full_name,
-          age:            member.age,
-          gender:         member.gender,
-          layoutPlotNo:   member.layout_plot_no,
-          doorNoOld:      member.door_no_old,
-          doorNoNew:      member.door_no_new,
-          street:         member.street,
-          mailingAddress: member.mailing_address,
-          phone:          member.phone,
-          landline:       member.landline,
-          email:          member.email,
-          status:         member.status,
-          familyMembers:  familyMembers.map(f => ({
-            name:         f.name,
-            relationship: f.relationship,
-            age:          f.age,
-            gender:       f.gender
-          }))
-        }
-      })
-    });
-    console.log('✅ Synced to Google Sheet:', member.full_name);
-  } catch (err) {
-    console.error('⚠️  Google Sheet sync failed (non-critical):', err.message);
-  }
-}
 
 // ─────────────────────────────────────────────
 // 0. Root Status
@@ -387,8 +343,7 @@ app.post('/api/members', async (req, res) => {
       else insertedFamily = familyData;
     }
 
-    // ── Step 3: Sync to Google Sheet (non-blocking) ──
-    syncToGoogleSheet(newMember, insertedFamily);
+
 
     res.status(201).json({
       success: true,
