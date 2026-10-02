@@ -14,6 +14,31 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
 
+// Simple High-Performance In-Memory Cache
+const cache = {
+  heads: { data: null, expiry: 0 },
+  members: { data: null, expiry: 0, queryKey: '' },
+  analytics: { data: null, expiry: 0 }
+};
+
+function getCached(key) {
+  const item = cache[key];
+  if (item && item.expiry > Date.now()) {
+    return item.data;
+  }
+  return null;
+}
+
+function setCache(key, data, ttlMs = 30000) {
+  cache[key] = { data, expiry: Date.now() + ttlMs };
+}
+
+function invalidateCache(...keys) {
+  keys.forEach(k => {
+    if (cache[k]) cache[k] = { data: null, expiry: 0 };
+  });
+}
+
 // ─────────────────────────────────────────────
 // 0. Root Status
 // ─────────────────────────────────────────────
@@ -55,6 +80,12 @@ app.get('/api/health', (req, res) => {
 // ─────────────────────────────────────────────
 app.get('/api/heads', async (req, res) => {
   try {
+    const cached = getCached('heads');
+    if (cached) {
+      res.setHeader('X-Cache', 'HIT');
+      return res.json(cached);
+    }
+
     const { data, error } = await supabase
       .from('association_heads')
       .select('*')
@@ -62,7 +93,7 @@ app.get('/api/heads', async (req, res) => {
 
     if (error) throw error;
 
-    const mapped = data.map(h => ({
+    const mapped = (data || []).map(h => ({
       id: h.id,
       name: h.name,
       role: h.role,
@@ -84,6 +115,8 @@ app.get('/api/heads', async (req, res) => {
       all:         mapped
     };
 
+    setCache('heads', grouped, 5 * 60 * 1000); // 5 minutes cache
+    res.setHeader('X-Cache', 'MISS');
     res.json(grouped);
   } catch (err) {
     console.error('GET /api/heads error:', err.message);
@@ -94,6 +127,7 @@ app.get('/api/heads', async (req, res) => {
 // POST /api/heads - Add or reset office bearers
 app.post('/api/heads', async (req, res) => {
   try {
+    invalidateCache('heads');
     const body = req.body;
     if (body.action === 'RESET') {
       return res.json({ success: true, message: 'Office bearers reset to official records' });
@@ -124,6 +158,7 @@ app.post('/api/heads', async (req, res) => {
 // PATCH /api/heads/:id - Update office bearer
 app.patch('/api/heads/:id', async (req, res) => {
   try {
+    invalidateCache('heads');
     const { id } = req.params;
     const body = req.body;
     const updatePayload = {};
@@ -154,6 +189,7 @@ app.patch('/api/heads/:id', async (req, res) => {
 // DELETE /api/heads/:id - Delete office bearer
 app.delete('/api/heads/:id', async (req, res) => {
   try {
+    invalidateCache('heads');
     const { id } = req.params;
     const { error } = await supabase
       .from('association_heads')
@@ -168,7 +204,6 @@ app.delete('/api/heads/:id', async (req, res) => {
   }
 });
 
-
 // ─────────────────────────────────────────────
 // 3. GET /api/members — Member List + Stats
 //    Source: Supabase → members table
@@ -177,6 +212,15 @@ app.delete('/api/heads/:id', async (req, res) => {
 app.get('/api/members', async (req, res) => {
   try {
     const { search, status, type } = req.query;
+    const isUnfiltered = !search && (!status || status === 'ALL') && (!type || type === 'ALL');
+
+    if (isUnfiltered) {
+      const cached = getCached('members');
+      if (cached) {
+        res.setHeader('X-Cache', 'HIT');
+        return res.json(cached);
+      }
+    }
 
     // Build query
     let query = supabase
@@ -201,14 +245,24 @@ app.get('/api/members', async (req, res) => {
       );
     }
 
-    const { data: members, error } = await query;
-    if (error) throw error;
-
-    // Stats query (always on full dataset)
-    const { data: allMembers, error: statsError } = await supabase
-      .from('members')
-      .select('status, resident_type');
-    if (statsError) throw statsError;
+    // Optimization: If unfiltered, we don't need a separate stats query!
+    // If filtered, run query & stats in parallel with Promise.all
+    let members, allMembers;
+    if (isUnfiltered) {
+      const { data, error } = await query;
+      if (error) throw error;
+      members = data || [];
+      allMembers = members;
+    } else {
+      const [membersRes, statsRes] = await Promise.all([
+        query,
+        supabase.from('members').select('status, resident_type')
+      ]);
+      if (membersRes.error) throw membersRes.error;
+      if (statsRes.error) throw statsRes.error;
+      members = membersRes.data || [];
+      allMembers = statsRes.data || [];
+    }
 
     const total      = allMembers.length;
     const approved   = allMembers.filter(m => m.status === 'Approved').length;
@@ -242,11 +296,18 @@ app.get('/api/members', async (req, res) => {
       }))
     }));
 
-    res.json({
+    const responseData = {
       success: true,
       stats: { total, approved, pending, rejected, ownersCount, tenantsCount, totalFeesCollected },
       members: mappedMembers
-    });
+    };
+
+    if (isUnfiltered) {
+      setCache('members', responseData, 30000); // 30s cache
+    }
+
+    res.setHeader('X-Cache', 'MISS');
+    res.json(responseData);
   } catch (err) {
     console.error('GET /api/members error:', err.message);
     res.status(500).json({ success: false, error: 'Failed to load members' });
@@ -345,6 +406,8 @@ app.post('/api/members', async (req, res) => {
 
 
 
+    invalidateCache('members', 'analytics');
+
     res.status(201).json({
       success: true,
       message: `Application #${newMember.application_no} registered successfully.`,
@@ -405,6 +468,8 @@ app.patch('/api/members/:appNo/status', async (req, res) => {
     if (error) throw error;
     if (!data) return res.status(404).json({ success: false, message: 'Member not found' });
 
+    invalidateCache('members', 'analytics');
+
     res.json({ success: true, member: data });
   } catch (err) {
     console.error('PATCH /api/members status error:', err.message);
@@ -418,6 +483,12 @@ app.patch('/api/members/:appNo/status', async (req, res) => {
 // ─────────────────────────────────────────────
 app.get('/api/analytics', async (req, res) => {
   try {
+    const cached = getCached('analytics');
+    if (cached) {
+      res.setHeader('X-Cache', 'HIT');
+      return res.json(cached);
+    }
+
     const { data: members, error } = await supabase
       .from('members')
       .select('age, street, resident_type, gender, status');
@@ -428,7 +499,7 @@ app.get('/api/analytics', async (req, res) => {
     const streetDistribution = {};
     const genderCount = { Male: 0, Female: 0, Other: 0 };
 
-    members.forEach(m => {
+    (members || []).forEach(m => {
       const age = Number(m.age) || 0;
       if (age >= 18 && age <= 35)      ageGroups['18-35']++;
       else if (age >= 36 && age <= 50) ageGroups['36-50']++;
@@ -441,13 +512,17 @@ app.get('/api/analytics', async (req, res) => {
       if (m.gender) genderCount[m.gender] = (genderCount[m.gender] || 0) + 1;
     });
 
-    res.json({
+    const analyticsData = {
       success: true,
-      total: members.length,
+      total: (members || []).length,
       ageGroups,
       streetDistribution,
       genderCount
-    });
+    };
+
+    setCache('analytics', analyticsData, 60000); // 1 min cache
+    res.setHeader('X-Cache', 'MISS');
+    res.json(analyticsData);
   } catch (err) {
     console.error('GET /api/analytics error:', err.message);
     res.status(500).json({ success: false, error: 'Failed to load analytics' });
